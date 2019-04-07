@@ -1,0 +1,34 @@
+#Path where foreman bits live in PE
+$rootPath = "x:\Deploy"
+$logPath = Join-Path $rootPath "Start.log"
+$foremanHost = "{{ win_build_katello }}"
+
+Import-Module (Join-Path $rootPath "BuildFunctions.ps1")
+
+Start-Transcript $logPath | Out-Null
+
+Write-Host ("StartInstall.ps1 started at " + (Get-Date))
+
+#1. Initialize Win PE
+Write-Host "Starting WinPE"
+Wpeinit 
+
+#2. Validate environment is ready for provisioning
+Write-Host "Validating disk & network configuration"
+ValidateDisks
+ValidateNetworks
+
+#3. Wait for networking to start
+BlockForNetwork
+
+#4. Download unattend files from foreman
+DownloadForemanUnattendFile $foremanHost "script" (Join-Path $rootPath "InstallWindows.ps1")
+DownloadForemanUnattendFile $foremanHost "finish" (Join-Path $rootPath "ConfigureWindows.ps1")
+DownloadForemanUnattendFile $foremanHost "provision" (Join-Path $rootPath "unattend.xml")
+
+Write-Host ("StartInstall.ps1 finished at " + (Get-Date))
+
+Stop-Transcript | Out-Null
+
+#5. Handover to InstallWindows.ps1
+&(Join-Path $rootPath "InstallWindows.ps1") $rootPath

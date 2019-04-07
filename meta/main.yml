@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Michael Cleary
+  description: Deploy Windows image builder and provisioner
+  company: ClusterApps.com
+  role_name: win-builder
+
+  license: BSD
+
+  min_ansible_version: 2.6
+
+  platforms:
+  - name: Windows
+    versions:
+      - all
+            
+  galaxy_tags:     
+    - windows
+
+dependencies: []
+

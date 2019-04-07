@@ -1,0 +1,1 @@
+powershell -ExecutionPolicy Unrestricted x:\Deploy\StartInstall.ps1
