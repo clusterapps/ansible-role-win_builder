@@ -44,6 +44,18 @@ function MountWim
     }
 }
 
+function MountBootWim
+{
+    $sourcesInstall = (Join-Path $sourcesPath boot.wim)
+    foreach ($index in (Get-WindowsImage -ImagePath $sourcesInstall | % {$_.ImageIndex}))
+    {
+        $temp = [System.IO.Path]::GetRandomFileName()
+        Write-Host "MountWim: Mounting ${sourcesInstall} index ${index} to ${temp}"
+        $tempmountPath = (Join-Path $mountPath $temp)
+        New-Item $tempmountPath -ItemType directory
+        Mount-WindowsImage -ImagePath $sourcesInstall -Path $tempmountPath -Index $index -LogPath $dismlogPath
+    }
+}
 function InjectAdkPackages
 {
     $adk = @([Environment]::GetFolderPath('ProgramFilesX86'),
