@@ -3,4 +3,5 @@ win_build_base: Z:\source
 win_build_deploy: Z:\Deploy
 win_build_wsusRoot: Z:\wsusoffline
 win_build_katello: katello.example.com
-
+win_build_shareuser: windeploy
+win_build_sharepass: ThisI5abAdPaSSwd
