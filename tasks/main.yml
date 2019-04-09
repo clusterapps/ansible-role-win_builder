@@ -108,6 +108,7 @@
     image_path: '{{ win_build_base }}\ISO\MS-WS2016.ISO'
     state: present
   register: image_dvd
+  changed_when:  false
 
 - name: Copy Windows install image
   win_copy:
@@ -128,6 +129,7 @@
     image_path: '{{ win_build_base }}\ISO\MS-WS2016.ISO'
     state: absent
   ignore_errors: yes
+  changed_when: false
 
 - name: Copy WinPE Boot image
   win_copy:
@@ -206,3 +208,36 @@
     src: '{{ win_build_base }}\Tools\wimboot-1.0.5\wimboot'
     dest: '{{ win_build_deploy }}\boot\wimboot'
     remote_src: yes
+
+# - name: Create Deployment Share RO User
+
+# - name: Create Deployment Share
+
+- name: Adding IIS Roles and Features
+  win_feature:
+    name:
+    - Web-Common-Http
+    - Web-Security
+    - Web-Mgmt-Service
+    - Web-Mgmt-Console
+    include_sub_features: yes
+    include_management_tools: yes
+    state: present
+  register: iis_feature
+
+- name: reboot if feature requires 
+  win_reboot:
+    reboot_timeout: 3600  
+  when: iis_feature.reboot_required
+
+- name: Create the Deploy virtual directory
+  win_iis_virtualdirectory:
+    name: deploy
+    site: Default Web Site
+    state: present
+    physical_path: Z:\Deploy\
+
+# - name: Add MIME Types to IIS
+#    win_shell: add-webconfigurationproperty //staticContent -name collection -value @{fileExtension='.wim'; mimeType='application/octet-stream'}  
+
+
