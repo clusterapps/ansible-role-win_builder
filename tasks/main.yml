@@ -266,14 +266,15 @@
     name: WebAdministration
     state: present
 
-# - name: Add MIME Type for WIM files
-#   win_command: powershell.exe -
-#   args:
-#     stdin: "Add-WebConfigurationProperty //staticContent -name collection -value @{fileExtension='.wim'; mimeType='application/octet-stream'}"
+- name: Add MIME Type for WIM files
+  win_command: powershell.exe -
+  args:
+    stdin: "Add-WebConfigurationProperty //staticContent -name collection -value @{fileExtension='.wim'; mimeType='application/octet-stream'}"
+  ignore_errors: yes  
 
-# - name: Add MIME Type for ISO files
-#   win_command: powershell.exe -
-#   args:
-#     stdin: "Add-WebConfigurationProperty //staticContent -name collection -value @{fileExtension='.iso'; mimeType='application/octet-stream'}"  
-
+- name: Add MIME Type for ISO files
+  win_command: powershell.exe -
+  args:
+    stdin: "Add-WebConfigurationProperty //staticContent -name collection -value @{fileExtension='.iso'; mimeType='application/octet-stream'}"  
+  ignore_errors: yes
 
