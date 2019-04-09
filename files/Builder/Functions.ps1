@@ -12,9 +12,10 @@ function GetWimArguments([string]$windowsVersion)
 function GetBootWimArguments()
 {
     $windowsVersion = "boot"
+    $bootsubfolder = "\boot"
     $args = @()
     $args += '-wimFile "' + (Join-Path (Join-Path $sourceWimsPath $windowsVersion) "boot.wim") + '"'
-    $args += '-destination "' + (Join-Path $destinationPath $windowsVersion) + '"'
+    $args += '-destination "' + (Join-Path $destinationPath $windowsVersion $bootsubfolder) + '"'
     $args += '-driversPath "' + (Join-Path $driversPath $windowsVersion) + '"'
     $args += '-isBoot 1'
     
@@ -154,3 +155,5 @@ function CopySources
     Write-Host "CopySources: Copying ${sourceWim} to ${destinationWim}"
     Copy-Item $sourceWim $destinationWim
 }
+
+

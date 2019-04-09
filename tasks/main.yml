@@ -156,15 +156,15 @@
     src: StartInstall.j2
     dest: '{{ win_build_base }}\Builder\bootinject\Deploy\StartInstall.ps1'
 
-- name: Copy startnet.cmd files
+- name: Copy Builder System32 files
   win_copy:
-    src: startnet.cmd
-    dest: '{{ win_build_base }}\Builder\bootinject\Windows\System32\Startnet.cmd'
+    src: system32/
+    dest: '{{ win_build_base }}\Builder\bootinject\Windows\System32\'
 
-- name: Copy Functions files
+- name: Copy Builder Deploy files
   win_copy:
-    src: BuildFunctions.ps1
-    dest: '{{ win_build_base }}\Builder\bootinject\Deploy\BuildFunctions.ps1'
+    src: Deploy/
+    dest: '{{ win_build_base }}\Builder\bootinject\Deploy\'
 
 
 #### Deployment  #######
@@ -179,11 +179,11 @@
     path: '{{ win_build_deploy }}\boot'
     state: directory    
 
-# - name: Copy boot files
-#   win_copy:
-#     src: C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\Media\Boot
-#     dest: '{{ win_build_deploy }}\boot\'
-#     remote_src: yes
+- name: Copy boot files
+  win_copy:
+    src: C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\Media\Boot
+    dest: '{{ win_build_deploy }}\boot\'
+    remote_src: yes
 
 - name: Copy Boot Manager
   win_copy:
@@ -261,7 +261,19 @@
     state: present
     physical_path: Z:\Deploy\
 
-# - name: Add MIME Types to IIS
-#    win_shell: add-webconfigurationproperty //staticContent -name collection -value @{fileExtension='.wim'; mimeType='application/octet-stream'}  
+- name: Import WebAdministration module
+  win_psmodule:
+    name: WebAdministration
+    state: present
+
+# - name: Add MIME Type for WIM files
+#   win_command: powershell.exe -
+#   args:
+#     stdin: "Add-WebConfigurationProperty //staticContent -name collection -value @{fileExtension='.wim'; mimeType='application/octet-stream'}"
+
+# - name: Add MIME Type for ISO files
+#   win_command: powershell.exe -
+#   args:
+#     stdin: "Add-WebConfigurationProperty //staticContent -name collection -value @{fileExtension='.iso'; mimeType='application/octet-stream'}"  
 
 
