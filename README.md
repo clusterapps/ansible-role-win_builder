@@ -16,18 +16,27 @@ A web server is required before running this role. Some software used in the rol
 There are a set of variables that must be defined for the environment. 
 
 win_build_base: Z:\source # location of builder source files
+
 win_build_deploy: Z:\Deploy # location of finished output
+
 win_build_wsusRoot: Z:\wsusoffline # location of WSUS Offline Updater root
+
 win_build_katello: katello.example.com # FQDN of Katello server or proxy. 
+
 win_build_share_iis: true # Set to false to not deploy local web server
+
 win_build_share_cifs: true # Set to false to skip share creation. NOTE: The share is required for MDT and SCCM like deployments.
+
 win_build_shareuser: windeploy # Local Windows user the share will be mounted read-only as
+
 win_build_sharepass: ThisI5abAdPaSSwd # Local Windows user's password
+
 win_build_ws2016_iso: https://download.example.com/iso/server16.iso # Location of Windows Server installation ISO. NOTE: Only test with 2016. Server 2019 will build images, but not be updated.
+
 win_build_wimbooturl: https://git.ipxe.org/release/wimboot/wimboot-1.0.5.zip
 
 ## Example Playbook
-
+<code>
 - name: Configure ClusterApps Windows Build Server 
   hosts: winbuilder
   vars:
@@ -36,5 +45,4 @@ win_build_wimbooturl: https://git.ipxe.org/release/wimboot/wimboot-1.0.5.zip
   roles:
     - win_builder
 
-
-    
+</code>
