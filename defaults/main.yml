@@ -3,5 +3,9 @@ win_build_base: Z:\source
 win_build_deploy: Z:\Deploy
 win_build_wsusRoot: Z:\wsusoffline
 win_build_katello: katello.example.com
+win_build_share_iis: true
+win_build_share_cifs: true
 win_build_shareuser: windeploy
 win_build_sharepass: ThisI5abAdPaSSwd
+win_build_ws2016_iso: https://download.example.com/iso/server16.iso
+win_build_wimbooturl: https://git.ipxe.org/release/wimboot/wimboot-1.0.5.zip

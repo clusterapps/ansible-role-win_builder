@@ -99,7 +99,7 @@
 
 - name: Download Windows Server 2016 media
   win_get_url:
-    url: http://shares.corp.clusterapps.com/iso/MS-WS2016.ISO
+    url: "{{ win_build_ws2016_iso }}"
     dest: '{{ win_build_base }}\ISO\MS-WS2016.ISO'
     force: no
 
@@ -193,7 +193,7 @@
 
 - name: Download wimboot
   win_get_url:
-    url: https://git.ipxe.org/release/wimboot/wimboot-1.0.5.zip
+    url: "{{ win_build_wimbooturl }}"
     dest: '{{ win_build_base }}\Tools\wimboot-1.0.5.zip'
     force: no    
 
@@ -209,72 +209,12 @@
     dest: '{{ win_build_deploy }}\boot\wimboot'
     remote_src: yes
 
-- name: Check for deployment group
-  win_group:
-    name: deployment
-    description: Deployment 
-    state: present
+  
+- name: Configure deployment share
+  include: deploy-share.yml
+  when: win_build_share_cifs == true
 
 
-- name: Check for Deployment user
-  win_user:
-    name: '{{ win_build_shareuser }}'
-    password: '{{ win_build_sharepass }}'
-    state: present
-    groups: 
-      - Users
-      - deployment
-    password_never_expires: yes
-    user_cannot_change_password: yes
-      
-
-- name: Add deployment share
-  win_share:
-    name: deploy
-    description: OS Deployment Files
-    path: '{{ win_build_deploy }}'
-    list: yes
-    full: Administrators
-    read: deployment
-
-- name: Adding IIS Roles and Features
-  win_feature:
-    name:
-    - Web-Common-Http
-    - Web-Security
-    - Web-Mgmt-Service
-    - Web-Mgmt-Console
-    include_sub_features: yes
-    include_management_tools: yes
-    state: present
-  register: iis_feature
-
-- name: reboot if feature requires 
-  win_reboot:
-    reboot_timeout: 3600  
-  when: iis_feature.reboot_required
-
-- name: Create the Deploy virtual directory
-  win_iis_virtualdirectory:
-    name: deploy
-    site: Default Web Site
-    state: present
-    physical_path: Z:\Deploy\
-
-- name: Import WebAdministration module
-  win_psmodule:
-    name: WebAdministration
-    state: present
-
-- name: Add MIME Type for WIM files
-  win_command: powershell.exe -
-  args:
-    stdin: "Add-WebConfigurationProperty //staticContent -name collection -value @{fileExtension='.wim'; mimeType='application/octet-stream'}"
-  ignore_errors: yes  
-
-- name: Add MIME Type for ISO files
-  win_command: powershell.exe -
-  args:
-    stdin: "Add-WebConfigurationProperty //staticContent -name collection -value @{fileExtension='.iso'; mimeType='application/octet-stream'}"  
-  ignore_errors: yes
-
+- name: Configure deployment web service
+  include: deploy-iis.yml
+  when: win_build_share_iis == true

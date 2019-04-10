@@ -1,0 +1,27 @@
+- name: Check for deployment group
+  win_group:
+    name: deployment
+    description: Deployment 
+    state: present
+
+
+- name: Check for Deployment user
+  win_user:
+    name: '{{ win_build_shareuser }}'
+    password: '{{ win_build_sharepass }}'
+    state: present
+    groups: 
+      - Users
+      - deployment
+    password_never_expires: yes
+    user_cannot_change_password: yes
+      
+
+- name: Add deployment share
+  win_share:
+    name: deploy
+    description: OS Deployment Files
+    path: '{{ win_build_deploy }}'
+    list: yes
+    full: Administrators
+    read: deployment
