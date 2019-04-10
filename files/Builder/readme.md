@@ -1,5 +1,7 @@
 # Foreman Windows WIM Scripts
 
+Based on [ForemanWimScripts](https://github.com/LiamLeane/ForemanWimScripts)
+
 These scripts help to build and maintain WIM images to complete a Windows Server install with Foreman and are designed to be used with the [ForemanWindows](https://github.com/LiamLeane/ForemanWindows) provisioning scripts.
 
 The only wim which is absolutely required to be built is boot.wim, the ForemanWindows templates will work with a RTM install.wim for each OS too, ideally you should be injecting drivers and latest updates to keep your new machines current (and prevent a significant post-install update) though.
